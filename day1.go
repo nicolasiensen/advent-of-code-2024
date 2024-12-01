@@ -9,10 +9,10 @@ import (
 	"strings"
 )
 
-func main() {
-	file, err := os.Open("input.txt")
+func processInput(fileName string) ([]int, []int, error) {
+	file, err := os.Open(fileName)
 	if err != nil {
-		fmt.Println(err)
+		return nil, nil, err
 	}
 
 	scanner := bufio.NewScanner(file)
@@ -26,16 +26,20 @@ func main() {
 		num1, err := strconv.Atoi(words[0])
 		list1 = append(list1, num1)
 		if err != nil {
-			fmt.Println(err)
+			return nil, nil, err
 		}
 
 		num2, err := strconv.Atoi(words[len(words)-1])
 		list2 = append(list2, num2)
 		if err != nil {
-			fmt.Println(err)
+			return nil, nil, err
 		}
 	}
 
+	return list1, list2, nil
+}
+
+func calculateDistance(list1 []int, list2 []int) int {
 	slices.Sort(list1)
 	slices.Sort(list2)
 
@@ -56,9 +60,16 @@ func main() {
 		sum += distances[i]
 	}
 
-	fmt.Println(sum)
+	return sum
+}
 
-	if err := scanner.Err(); err != nil {
-		fmt.Fprintln(os.Stderr, "reading standard input:", err)
+func main() {
+	list1, list2, err := processInput("input.txt")
+	if err != nil {
+		fmt.Println(err)
 	}
+
+	distance := calculateDistance(list1, list2)
+
+	fmt.Println(distance)
 }
