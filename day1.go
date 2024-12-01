@@ -39,7 +39,7 @@ func processInput(fileName string) ([]int, []int, error) {
 	return list1, list2, nil
 }
 
-func calculateDistance(list1 []int, list2 []int) int {
+func calcDistances(list1 []int, list2 []int) []int {
 	slices.Sort(list1)
 	slices.Sort(list2)
 
@@ -54,13 +54,7 @@ func calculateDistance(list1 []int, list2 []int) int {
 		distances = append(distances, distance)
 	}
 
-	sum := 0
-
-	for i := range distances {
-		sum += distances[i]
-	}
-
-	return sum
+	return distances
 }
 
 func calcSimiliarities(list1 []int, list2 []int) []int {
@@ -97,7 +91,8 @@ func main() {
 		fmt.Println(err)
 	}
 
-	distance := calculateDistance(list1, list2)
+	distances := calcDistances(list1, list2)
+	distance := sum(distances)
 
 	similiarities := calcSimiliarities(list1, list2)
 	similiarity := sum(similiarities)
