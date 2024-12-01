@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"slices"
-	"sort"
 	"strconv"
 	"strings"
 )
@@ -19,7 +18,6 @@ func main() {
 	scanner := bufio.NewScanner(file)
 	var list1 []int
 	var list2 []int
-	var distances []int
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -41,9 +39,7 @@ func main() {
 	slices.Sort(list1)
 	slices.Sort(list2)
 
-	sort.Slice(list2, func(i, j int) bool {
-		return i < j
-	})
+	var distances []int
 
 	for i := range list1 {
 		distance := list1[i] - list2[i]
