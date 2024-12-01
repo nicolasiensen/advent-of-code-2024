@@ -63,6 +63,34 @@ func calculateDistance(list1 []int, list2 []int) int {
 	return sum
 }
 
+func calcSimiliarities(list1 []int, list2 []int) []int {
+	var similiarities []int
+
+	for i := range list1 {
+		similiarity := 0
+
+		for j := range list2 {
+			if list1[i] == list2[j] {
+				similiarity++
+			}
+		}
+
+		similiarities = append(similiarities, list1[i]*similiarity)
+	}
+
+	return similiarities
+}
+
+func sum(list []int) int {
+	sum := 0
+
+	for i := range list {
+		sum += list[i]
+	}
+
+	return sum
+}
+
 func main() {
 	list1, list2, err := processInput("input.txt")
 	if err != nil {
@@ -71,5 +99,8 @@ func main() {
 
 	distance := calculateDistance(list1, list2)
 
-	fmt.Println(distance)
+	similiarities := calcSimiliarities(list1, list2)
+	similiarity := sum(similiarities)
+
+	fmt.Println("distance:", distance, "similiarity:", similiarity)
 }
