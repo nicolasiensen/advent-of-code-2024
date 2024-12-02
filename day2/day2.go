@@ -7,6 +7,21 @@ import (
 	"strings"
 )
 
+func areAdjacentLevelsSafe(level1 int, level2 int, isFirstLevel bool, reportIncreasing bool) bool {
+	delta := level1 - level2
+
+	if delta > 3 || delta < -3 || delta == 0 {
+		return false
+	}
+
+	if level1 < level2 && !reportIncreasing && !isFirstLevel {
+		return false
+	} else if level1 > level2 && reportIncreasing && !isFirstLevel {
+		return false
+	}
+	return true
+}
+
 func main() {
 	file, err := os.Open("input.txt")
 	if err != nil {
@@ -38,20 +53,14 @@ func main() {
 				println(err)
 			}
 
-			delta := level1 - level2
-
-			if delta > 3 || delta < -3 || delta == 0 {
-				break
-			}
-
 			if i == 0 {
 				reportIncreasing = level1 < level2
-			} else {
-				if level1 < level2 && !reportIncreasing {
-					break
-				} else if level1 > level2 && reportIncreasing {
-					break
-				}
+			}
+
+			safe := areAdjacentLevelsSafe(level1, level2, i == 0, reportIncreasing)
+
+			if !safe {
+				break
 			}
 		}
 	}
