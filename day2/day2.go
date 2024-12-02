@@ -22,34 +22,36 @@ func main() {
 		var reportIncreasing bool
 
 		for i := range levelsStr {
+			// The report is safe when this for loop reaches the last level without breaking it
+			if i+1 == len(levelsStr) {
+				safeReportsCount++
+				break
+			}
+
 			level1, err := strconv.Atoi(levelsStr[i])
 			if err != nil {
 				println(err)
 			}
 
-			if i+1 < len(levelsStr) {
-				level2, err := strconv.Atoi(levelsStr[i+1])
-				if err != nil {
-					println(err)
-				}
+			level2, err := strconv.Atoi(levelsStr[i+1])
+			if err != nil {
+				println(err)
+			}
 
-				delta := level1 - level2
+			delta := level1 - level2
 
-				if delta > 3 || delta < -3 || delta == 0 {
+			if delta > 3 || delta < -3 || delta == 0 {
+				break
+			}
+
+			if i == 0 {
+				reportIncreasing = level1 < level2
+			} else {
+				if level1 < level2 && !reportIncreasing {
+					break
+				} else if level1 > level2 && reportIncreasing {
 					break
 				}
-
-				if i == 0 {
-					reportIncreasing = level1 < level2
-				} else {
-					if level1 < level2 && !reportIncreasing {
-						break
-					} else if level1 > level2 && reportIncreasing {
-						break
-					}
-				}
-			} else {
-				safeReportsCount++
 			}
 		}
 	}
