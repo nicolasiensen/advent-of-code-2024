@@ -5,22 +5,9 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"example.com/level"
 )
-
-func areAdjacentLevelsSafe(level1 int, level2 int, isFirstLevel bool, reportIncreasing bool) bool {
-	delta := level1 - level2
-
-	if delta > 3 || delta < -3 || delta == 0 {
-		return false
-	}
-
-	if level1 < level2 && !reportIncreasing && !isFirstLevel {
-		return false
-	} else if level1 > level2 && reportIncreasing && !isFirstLevel {
-		return false
-	}
-	return true
-}
 
 func main() {
 	file, err := os.Open("input.txt")
@@ -57,7 +44,7 @@ func main() {
 				reportIncreasing = level1 < level2
 			}
 
-			safe := areAdjacentLevelsSafe(level1, level2, i == 0, reportIncreasing)
+			safe := level.Safe(level1, level2, i == 0, reportIncreasing)
 
 			if !safe {
 				break
