@@ -32,7 +32,7 @@ func main() {
 			reportInt = append(reportInt, item)
 		}
 
-		if report.Safe(reportInt) {
+		if report.TolerantSafe(reportInt) {
 			safeReportsCount++
 		}
 	}
