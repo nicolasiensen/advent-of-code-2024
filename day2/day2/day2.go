@@ -21,7 +21,7 @@ func main() {
 	for scanner.Scan() {
 		line := scanner.Text()
 		levelsStr := strings.Split(line, " ")
-		var reportIncreasing bool
+		var increasing bool
 
 		for i := range levelsStr {
 			// The report is safe when this for loop reaches the last level without breaking it
@@ -41,10 +41,10 @@ func main() {
 			}
 
 			if i == 0 {
-				reportIncreasing = level1 < level2
+				increasing = level1 < level2
 			}
 
-			safe := level.Safe(level1, level2, i == 0, reportIncreasing)
+			safe := level.Safe(level1, level2, increasing)
 
 			if !safe {
 				break
