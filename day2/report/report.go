@@ -28,3 +28,24 @@ func Safe(report []int) bool {
 	}
 	return true
 }
+
+func TolerantSafe(report []int) bool {
+	if Safe(report) {
+		return true
+	} else {
+		for i := 0; i < len(report); i++ {
+			var partialReport []int
+
+			for o := range report {
+				if o != i {
+					partialReport = append(partialReport, report[o])
+				}
+			}
+
+			if Safe(partialReport) {
+				return true
+			}
+		}
+	}
+	return false
+}
