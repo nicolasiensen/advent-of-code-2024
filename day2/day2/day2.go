@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"example.com/level"
+	"example.com/report"
 )
 
 func main() {
@@ -20,35 +20,20 @@ func main() {
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		levelsStr := strings.Split(line, " ")
-		var increasing bool
+		reportStr := strings.Split(line, " ")
+		var reportInt []int
 
-		for i := range levelsStr {
-			// The report is safe when this for loop reaches the last level without breaking it
-			if i+1 == len(levelsStr) {
-				safeReportsCount++
-				break
-			}
-
-			level1, err := strconv.Atoi(levelsStr[i])
+		for i := range reportStr {
+			item, err := strconv.Atoi(reportStr[i])
 			if err != nil {
 				println(err)
 			}
 
-			level2, err := strconv.Atoi(levelsStr[i+1])
-			if err != nil {
-				println(err)
-			}
+			reportInt = append(reportInt, item)
+		}
 
-			if i == 0 {
-				increasing = level1 < level2
-			}
-
-			safe := level.Safe(level1, level2, increasing)
-
-			if !safe {
-				break
-			}
+		if report.Safe(reportInt) {
+			safeReportsCount++
 		}
 	}
 
