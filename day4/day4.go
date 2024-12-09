@@ -1,77 +1,36 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"strings"
 )
 
 func main() {
-	file, err := os.Open("input.txt")
+	file, err := os.ReadFile("input.txt")
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	var rows []string
-	var cols []string
-	var diagL []string
-	var diagR []string
-
-	scanner := bufio.NewScanner(file)
-	lineIndex := 0
-	for scanner.Scan() {
-		line := scanner.Text()
-		lineLen := len(line)
-
-		rows = append(rows, line)
-
-		for i := 0; i < lineLen; i++ {
-			charAsc := string(line[i])
-			charDsc := string(line[lineLen-i-1])
-
-			if len(cols) > i {
-				cols[i] = cols[i] + charAsc
-			} else {
-				cols = append(cols, charAsc)
-			}
-
-			if len(diagL) > i+lineIndex {
-				diagL[i+lineIndex] = diagL[i+lineIndex] + charAsc
-			} else {
-				diagL = append(diagL, charAsc)
-			}
-
-			if len(diagR) > i+lineIndex {
-				diagR[i+lineIndex] = diagR[i+lineIndex] + charDsc
-			} else {
-				diagR = append(diagR, charDsc)
-			}
-		}
-
-		lineIndex++
-	}
-
+	lines := strings.Split(string(file), "\n")
 	count := 0
 
-	for _, text := range rows {
-		count += strings.Count(text, "XMAS")
-		count += strings.Count(text, "SAMX")
-	}
+	for i := 0; i < len(lines)-3; i++ {
+		line := lines[i]
 
-	for _, text := range cols {
-		count += strings.Count(text, "XMAS")
-		count += strings.Count(text, "SAMX")
-	}
+		for j := 0; j < len(line)-2; j++ {
+			tl := string(line[j])
+			tr := string(line[j+2])
+			md := string(lines[i+1][j+1])
+			bl := string(lines[i+2][j])
+			br := string(lines[i+2][j+2])
+			x1 := tl + md + br
+			x2 := bl + md + tr
 
-	for _, text := range diagL {
-		count += strings.Count(text, "XMAS")
-		count += strings.Count(text, "SAMX")
-	}
-
-	for _, text := range diagR {
-		count += strings.Count(text, "XMAS")
-		count += strings.Count(text, "SAMX")
+			if (x1 == "MAS" || x1 == "SAM") && (x2 == "MAS" || x2 == "SAM") {
+				count++
+			}
+		}
 	}
 
 	fmt.Println(count)
