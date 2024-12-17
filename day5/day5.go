@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -28,27 +29,37 @@ func main() {
 	}
 	updates := updateRegexp.FindAllString(fstring, -1)
 
-	sum := 0
+	correctSum := 0
+	incorrectSum := 0
 
 	for _, update := range updates {
+		var sumPointer *int
+		var fixedUpdate string
+
 		if Correct(update, orders) {
-			midv, err := MidValue(update)
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
-
-			midi, err := strconv.Atoi(midv)
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
-
-			sum += midi
+			sumPointer = &correctSum
+			fixedUpdate = update
+		} else {
+			sumPointer = &incorrectSum
+			fixedUpdate = Reorder(update, orders)
 		}
+
+		midv, err := MidValue(fixedUpdate)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		midi, err := strconv.Atoi(midv)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		*sumPointer += midi
 	}
 
-	fmt.Println(sum)
+	fmt.Println("correct sum:", correctSum, "| incorrect sum:", incorrectSum)
 }
 
 func MidValue(update string) (string, error) {
@@ -75,4 +86,22 @@ func Correct(update string, orders []string) bool {
 	}
 
 	return true
+}
+
+func Reorder(update string, orders []string) string {
+	pages := strings.Split(update, ",")
+
+	for !Correct(strings.Join(pages, ","), orders) {
+		for _, order := range orders {
+			oarray := strings.Split(order, "|")
+			o1index := slices.Index(pages, oarray[0])
+			o2index := slices.Index(pages, oarray[1])
+
+			if o1index != -1 && o2index != -1 && o1index > o2index {
+				pages[o1index], pages[o2index] = pages[o2index], pages[o1index]
+			}
+		}
+	}
+
+	return strings.Join(pages, ",")
 }

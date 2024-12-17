@@ -73,3 +73,39 @@ func TestMidValueWithValidUpdate(t *testing.T) {
 		t.Fatalf(`MidValue(%v) = %v, %v but it should be %v, %v`, update, midv, err, expected, nil)
 	}
 }
+
+func TestReorderCase1(t *testing.T) {
+	update := "75,97,47,61,53"
+
+	expected := "97,75,47,61,53"
+
+	reordered := Reorder(update, orders)
+
+	if reordered != expected {
+		t.Fatalf(`Reordered(%v, %v) = %v but it should be %v`, update, orders, reordered, expected)
+	}
+}
+
+func TestReorderCase2(t *testing.T) {
+	update := "61,13,29"
+
+	expected := "61,29,13"
+
+	reordered := Reorder(update, orders)
+
+	if reordered != expected {
+		t.Fatalf(`Reordered(%v, %v) = %v but it should be %v`, update, orders, reordered, expected)
+	}
+}
+
+func TestReorderCase3(t *testing.T) {
+	update := "97,13,75,29,47"
+
+	expected := "97,75,47,29,13"
+
+	reordered := Reorder(update, orders)
+
+	if reordered != expected {
+		t.Fatalf(`Reordered(%v, %v) = %v but it should be %v`, update, orders, reordered, expected)
+	}
+}
