@@ -117,6 +117,10 @@ func (g Guard) uniquePositions() []Point {
 	return uniquePositions
 }
 
+func (g *Guard) move() {
+	g.Positions = append(g.Positions, g.nextPos())
+}
+
 type Bearing int
 
 const (
