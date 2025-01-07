@@ -138,6 +138,14 @@ func (g Guard) nextPos() Point {
 	return nextPos
 }
 
+func (g *Guard) turn() Bearing {
+	g.Bearing += 1
+	if g.Bearing > 3 {
+		g.Bearing = 0
+	}
+	return g.Bearing
+}
+
 type Bearing int
 
 const (
