@@ -121,6 +121,23 @@ func (g *Guard) move() {
 	g.Positions = append(g.Positions, g.nextPos())
 }
 
+func (g Guard) nextPos() Point {
+	nextPos := Point{g.lastPos().X, g.lastPos().Y}
+
+	switch g.Bearing {
+	case north:
+		nextPos.Y -= 1
+	case east:
+		nextPos.X += 1
+	case south:
+		nextPos.Y += 1
+	case west:
+		nextPos.X -= 1
+	}
+
+	return nextPos
+}
+
 type Bearing int
 
 const (
