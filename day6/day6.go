@@ -19,7 +19,6 @@ func main() {
 	width := len(lines[0])
 	height := len(lines)
 	obstacles := []Point{}
-	uniquePositions := []Point{}
 	var position Point
 	var bearing Bearing
 
@@ -76,24 +75,9 @@ func main() {
 		} else {
 			guard.Positions = append(guard.Positions, newPos)
 		}
-
-		for i, p := range guard.Positions {
-			unique := true
-
-			for _, up := range uniquePositions {
-				if p.X == up.X && p.Y == up.Y {
-					unique = false
-				}
-			}
-
-			if unique {
-				fmt.Printf("Unique position: %v, %d\n", p, i)
-				uniquePositions = append(uniquePositions, p)
-			}
-		}
 	}
 
-	fmt.Printf("Width: %d Height: %d Unique positions: %v Obstacles: %d\n", width, height, len(uniquePositions), len(obstacles))
+	fmt.Printf("Width: %d Height: %d Unique positions: %v Obstacles: %d\n", width, height, len(guard.uniquePositions()), len(obstacles))
 }
 
 type Point struct {
@@ -112,6 +96,25 @@ func (g Guard) lastPos() Point {
 
 func (g Guard) isWithinBounds(width int, height int) bool {
 	return g.lastPos().X > 0 && g.lastPos().X < width && g.lastPos().Y > 0 && g.lastPos().Y < height
+}
+
+func (g Guard) uniquePositions() []Point {
+	var uniquePositions []Point
+	for i, p := range g.Positions {
+		unique := true
+
+		for _, up := range uniquePositions {
+			if p == up {
+				unique = false
+			}
+		}
+
+		if unique {
+			fmt.Printf("Unique position: %v, %d\n", p, i)
+			uniquePositions = append(uniquePositions, p)
+		}
+	}
+	return uniquePositions
 }
 
 type Bearing int
