@@ -45,18 +45,7 @@ func main() {
 	guard := Guard{[]Point{position}, bearing}
 
 	for guard.isWithinBounds(width, height) {
-		newPos := Point{guard.lastPos().X, guard.lastPos().Y}
-
-		switch guard.Bearing {
-		case north:
-			newPos.Y -= 1
-		case east:
-			newPos.X += 1
-		case south:
-			newPos.Y += 1
-		case west:
-			newPos.X -= 1
-		}
+		newPos := guard.nextPos()
 
 		isColliding := false
 
@@ -68,12 +57,9 @@ func main() {
 		}
 
 		if isColliding {
-			guard.Bearing += 1
-			if guard.Bearing > 3 {
-				guard.Bearing = 0
-			}
+			guard.turn()
 		} else {
-			guard.Positions = append(guard.Positions, newPos)
+			guard.move()
 		}
 	}
 
