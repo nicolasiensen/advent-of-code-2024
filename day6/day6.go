@@ -45,9 +45,8 @@ func main() {
 
 	guard := Guard{[]Point{position}, bearing}
 
-	for guard.Positions[len(guard.Positions)-1].X > 0 && guard.Positions[len(guard.Positions)-1].X < width && guard.Positions[len(guard.Positions)-1].Y > 0 && guard.Positions[len(guard.Positions)-1].Y < height {
-		lastPos := guard.Positions[len(guard.Positions)-1]
-		newPos := Point{lastPos.X, lastPos.Y}
+	for guard.isWithinBounds(width, height) {
+		newPos := Point{guard.lastPos().X, guard.lastPos().Y}
 
 		switch guard.Bearing {
 		case north:
@@ -105,6 +104,14 @@ type Point struct {
 type Guard struct {
 	Positions []Point
 	Bearing   Bearing
+}
+
+func (g Guard) lastPos() Point {
+	return g.Positions[len(g.Positions)-1]
+}
+
+func (g Guard) isWithinBounds(width int, height int) bool {
+	return g.lastPos().X > 0 && g.lastPos().X < width && g.lastPos().Y > 0 && g.lastPos().Y < height
 }
 
 type Bearing int
