@@ -45,22 +45,16 @@ func main() {
 	guard := Guard{[]Point{position}, bearing}
 
 	for guard.isWithinBounds(width, height) {
-		newPos := guard.nextPos()
-
-		isColliding := false
+		nextPos := guard.nextPos()
 
 		for _, obstacle := range obstacles {
-			if obstacle == newPos {
-				isColliding = true
+			if obstacle == nextPos {
+				guard.turn()
 				break
 			}
 		}
 
-		if isColliding {
-			guard.turn()
-		} else {
-			guard.move()
-		}
+		guard.move()
 	}
 
 	fmt.Printf("Width: %d Height: %d Unique positions: %v Obstacles: %d\n", width, height, len(guard.uniquePositions()), len(obstacles))
