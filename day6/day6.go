@@ -27,16 +27,16 @@ func main() {
 			if col == '#' {
 				obstacles = append(obstacles, Point{j, i})
 			} else if col == '^' {
-				bearing = north
+				bearing = North
 				position = Point{j, i}
 			} else if col == '>' {
-				bearing = east
+				bearing = East
 				position = Point{j, i}
 			} else if col == 'v' {
-				bearing = south
+				bearing = South
 				position = Point{j, i}
 			} else if col == '<' {
-				bearing = west
+				bearing = West
 				position = Point{j, i}
 			}
 		}
@@ -44,93 +44,18 @@ func main() {
 
 	guard := Guard{[]Point{position}, bearing}
 
-	for guard.isWithinBounds(width, height) {
-		nextPos := guard.nextPos()
+	for guard.IsWithinBounds(width, height) {
+		nextPos := guard.NextPos()
 
 		for _, obstacle := range obstacles {
 			if obstacle == nextPos {
-				guard.turn()
+				guard.Turn()
 				break
 			}
 		}
 
-		guard.move()
+		guard.Move()
 	}
 
-	fmt.Printf("Width: %d Height: %d Unique positions: %v Obstacles: %d\n", width, height, len(guard.uniquePositions()), len(obstacles))
+	fmt.Printf("Width: %d Height: %d Unique positions: %v Obstacles: %d\n", width, height, len(guard.UniquePositions()), len(obstacles))
 }
-
-type Point struct {
-	X int
-	Y int
-}
-
-type Guard struct {
-	Positions []Point
-	Bearing   Bearing
-}
-
-func (g Guard) lastPos() Point {
-	return g.Positions[len(g.Positions)-1]
-}
-
-func (g Guard) isWithinBounds(width int, height int) bool {
-	return g.lastPos().X > 0 && g.lastPos().X < width && g.lastPos().Y > 0 && g.lastPos().Y < height
-}
-
-func (g Guard) uniquePositions() []Point {
-	var uniquePositions []Point
-	for i, p := range g.Positions {
-		unique := true
-
-		for _, up := range uniquePositions {
-			if p == up {
-				unique = false
-			}
-		}
-
-		if unique {
-			fmt.Printf("Unique position: %v, %d\n", p, i)
-			uniquePositions = append(uniquePositions, p)
-		}
-	}
-	return uniquePositions
-}
-
-func (g *Guard) move() {
-	g.Positions = append(g.Positions, g.nextPos())
-}
-
-func (g Guard) nextPos() Point {
-	nextPos := Point{g.lastPos().X, g.lastPos().Y}
-
-	switch g.Bearing {
-	case north:
-		nextPos.Y -= 1
-	case east:
-		nextPos.X += 1
-	case south:
-		nextPos.Y += 1
-	case west:
-		nextPos.X -= 1
-	}
-
-	return nextPos
-}
-
-func (g *Guard) turn() Bearing {
-	g.Bearing += 1
-	if g.Bearing > 3 {
-		g.Bearing = 0
-	}
-	return g.Bearing
-}
-
-type Bearing int
-
-const (
-	north Bearing = iota
-	east
-	south
-	west
-)
