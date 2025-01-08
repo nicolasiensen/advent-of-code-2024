@@ -69,3 +69,18 @@ func (g *Guard) Turn() Bearing {
 	}
 	return g.Bearing
 }
+
+func (g *Guard) Patrol(width int, height int, obstacles []Point) {
+	for g.IsWithinBounds(width, height) {
+		nextPos := g.NextPos()
+
+		for _, obstacle := range obstacles {
+			if obstacle == nextPos {
+				g.Turn()
+				break
+			}
+		}
+
+		g.Move()
+	}
+}

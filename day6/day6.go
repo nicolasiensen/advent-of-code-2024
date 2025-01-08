@@ -43,19 +43,7 @@ func main() {
 	}
 
 	guard := BuildGuard(position, bearing)
-
-	for guard.IsWithinBounds(width, height) {
-		nextPos := guard.NextPos()
-
-		for _, obstacle := range obstacles {
-			if obstacle == nextPos {
-				guard.Turn()
-				break
-			}
-		}
-
-		guard.Move()
-	}
+	guard.Patrol(width, height, obstacles)
 
 	fmt.Printf("Width: %d Height: %d Unique positions: %v Obstacles: %d\n", width, height, len(guard.UniquePositions()), len(obstacles))
 }
