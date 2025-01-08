@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 )
 
 func main() {
@@ -13,36 +12,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	input := string(inputb)
-	lines := strings.Split(input, "\n")
-	lines = lines[0 : len(lines)-1]
-	width := len(lines[0])
-	height := len(lines)
-	obstacles := []Point{}
-	var position Point
-	var bearing Bearing
-
-	for i, line := range lines {
-		for j, col := range line {
-			if col == '#' {
-				obstacles = append(obstacles, Point{j, i})
-			} else if col == '^' {
-				bearing = North
-				position = Point{j, i}
-			} else if col == '>' {
-				bearing = East
-				position = Point{j, i}
-			} else if col == 'v' {
-				bearing = South
-				position = Point{j, i}
-			} else if col == '<' {
-				bearing = West
-				position = Point{j, i}
-			}
-		}
-	}
-
-	guard := BuildGuard(position, bearing)
+	width, height, obstacles, guard := Parse(string(inputb))
 	guard.Patrol(width, height, obstacles)
 
 	fmt.Printf("Width: %d Height: %d Unique positions: %v Obstacles: %d\n", width, height, len(guard.UniquePositions()), len(obstacles))
