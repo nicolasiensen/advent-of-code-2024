@@ -9,6 +9,10 @@ type Guard struct {
 	Bearing   Bearing
 }
 
+func BuildGuard(position Point, bearing Bearing) Guard {
+	return Guard{[]Point{position}, bearing}
+}
+
 func (g Guard) LastPos() Point {
 	return g.Positions[len(g.Positions)-1]
 }

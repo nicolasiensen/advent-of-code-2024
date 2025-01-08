@@ -42,7 +42,7 @@ func main() {
 		}
 	}
 
-	guard := Guard{[]Point{position}, bearing}
+	guard := BuildGuard(position, bearing)
 
 	for guard.IsWithinBounds(width, height) {
 		nextPos := guard.NextPos()
