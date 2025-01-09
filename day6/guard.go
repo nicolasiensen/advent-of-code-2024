@@ -1,11 +1,12 @@
 package main
 
 type Guard struct {
-	Vectors []Vector
+	Vectors  []Vector
+	IsInLoop bool
 }
 
 func BuildGuard(position Point, bearing Bearing) Guard {
-	return Guard{[]Vector{{position, bearing}}}
+	return Guard{[]Vector{{position, bearing}}, false}
 }
 
 func (g Guard) Position() Point {
@@ -67,7 +68,7 @@ func (g *Guard) Turn() Bearing {
 }
 
 func (g *Guard) Patrol(width int, height int, obstacles []Point) {
-	for g.IsWithinBounds(width, height) {
+	for g.IsWithinBounds(width, height) && !g.IsInLoop {
 		nextPos := g.NextVector().Point
 
 		for _, obstacle := range obstacles {
@@ -78,9 +79,20 @@ func (g *Guard) Patrol(width int, height int, obstacles []Point) {
 		}
 
 		g.Move()
+		g.CheckLoop()
 	}
 }
 
 func (g Guard) Bearing() Bearing {
 	return g.Vectors[len(g.Vectors)-1].Bearing
+}
+
+func (g *Guard) CheckLoop() {
+	for i := 0; i < len(g.Vectors); i++ {
+		for j := i + 1; j < len(g.Vectors); j++ {
+			if g.Vectors[i] == g.Vectors[j] {
+				g.IsInLoop = true
+			}
+		}
+	}
 }
