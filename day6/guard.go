@@ -74,12 +74,12 @@ func (g *Guard) Patrol(width int, height int, obstacles []Point) {
 		for _, obstacle := range obstacles {
 			if obstacle == nextPos {
 				g.Turn()
+				g.CheckLoop()
 				break
 			}
 		}
 
 		g.Move()
-		g.CheckLoop()
 	}
 }
 
